@@ -1,0 +1,170 @@
+
+
+@media screen and (max-width: 600px) {
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: Camphor, Open Sans, Segoe UI, sans-serif;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden;
+        background: #6772E5;
+    }
+    
+    .navbar {
+        position: absolute;
+        width: calc(15vmin * 6);
+        transform: translate(-50%,0);
+        left: 50%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 1rem;
+        background-color: #ffffffb9;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(90, 90, 100, 0.4);
+        
+    }
+    
+    .navbar-logo {
+        font-weight: bold;
+        font-size: 1rem;
+        text-decoration: none;
+        color: #6B7C93;
+    }
+    
+    .navbar-nav {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .nav-item {
+        margin-left: .5rem;
+    }
+    
+    .nav-link {
+        text-decoration: none;
+        color: #4a4a4a;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 0.5rem;
+        border-radius: 4px;
+    }
+    
+    .nav-link:hover {
+        background-color: #6B7C93b9;
+        color: #B1BBC8;
+    }
+    
+    body > .blob {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: linear-gradient(180deg, rgba(62, 207, 142, .42) 31.77%, #b339a1 100%);
+        border-radius: 23% 77% 54% 46% / 33% 41% 59% 67%;
+        transform: translate(-100px, -50px) rotate(-90deg);
+        animation: animateBlob 30s infinite alternate;
+    }
+    
+    body > .blob:nth-child(2) {
+        background: linear-gradient(180deg, rgba(174, 79, 167, .42) 31.77%, #FF005C 100%);
+        transform: translate(-100px, 400px) rotate(90deg);
+        border-radius: 52% 48% 31% 69% / 31% 50% 50% 69% ;
+        animation: animateBlob2 180s infinite alternate;
+    }
+    
+    @keyframes animateBlob {
+        100% {
+            transform: translate(25px, 50px) rotate(-10deg);
+            border-radius: 76% 24% 33% 67% / 68% 55% 45% 32%;
+        }
+        
+    }
+    
+    @keyframes animateBlob2 {
+        100% {
+            transform: translate(100px, 500px) rotate(20deg);
+            border-radius: 76% 24% 33% 67% / 68% 55% 45% 32%;
+        }
+        
+    }
+
+    .wrapper {
+        position: absolute;
+        transform: translate(-50%,-50%);
+        left: 50%;
+        top: 56%;
+        background-color: transparent;
+        /*filter: hue-rotate(180deg);*/
+    }
+
+    .container {
+        background-color:#f6f9fcb9;
+        height: auto;
+        width: calc(15vmin * 6);
+        padding: 15px;
+        gap: 10px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(90, 90, 100, 0.4);
+        /*filter: hue-rotate(180deg); */
+    }
+
+    .framewrapper {
+        position: relative;
+        height: auto;
+        width: 100%;
+        color: #6B7C93;
+        /*filter: hue-rotate(180deg); */
+    }
+
+    .buttonwrapper{
+        padding: 5% 0;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        gap: 5%;
+    }
+
+    button {
+        padding: 0px 10px;
+        width: fit-content;
+        height: 45px;
+        background: #6B7C93;
+        font-weight: bold;
+        color: #F6F9FC;
+        border: none;
+        outline: none;
+        border-radius: 40px;
+        transition: .25s;
+    }
+
+    .buttonwrapper > button:nth-child(2) {
+        background: #F6F9FCb9;
+        color: #6B7C93;
+        border: 2px solid #6B7C93;
+    }
+
+    .buttonwrapper > button:nth-child(1):hover, .buttonwrapper > button:nth-child(1):active {
+        color: #B1BBC8;
+        background: #F6F9FCb9;
+        transform: translateY(-1px);
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .buttonwrapper > button:nth-child(2):hover, .buttonwrapper > button:nth-child(2):active  {
+        color: #B1BBC8;
+        background: #6B7C93;
+        transform: translateY(-1px);
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        border: none;
+    }
+    
+}
