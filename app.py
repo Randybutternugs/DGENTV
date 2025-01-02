@@ -13,6 +13,7 @@ def create_flask_app():
         if not user_id:
             return jsonify({"error": "userId is required"}), 400
 
+        # Replace this with a valid token if necessary, or remove if not needed.
         headers = {"Authorization": "Bearer YOUR_BEARER_TOKEN_HERE"}
         params = {"userId": user_id}
 
@@ -22,7 +23,14 @@ def create_flask_app():
             resp.raise_for_status()
             data = resp.json()
             return jsonify(data)
+
         except requests.exceptions.RequestException as e:
+            # Print debug details so you can see the raw error/response in your console
+            if e.response is not None:
+                print("Roobet API Error:", e.response.text)
+            else:
+                print("Request exception (no response object):", e)
+            
             return jsonify({"error": str(e)}), 500
 
     return app
