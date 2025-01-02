@@ -1,74 +1,58 @@
-# dash_app.py
 import dash
-from dash import dcc, html, Input, Output
-import requests
+from dash import dcc, html
 import plotly.express as px
+import plotly.graph_objects as go
+import requests
+import pandas as pd
 
 def init_dash(flask_app):
-    # Pass in the Flask server to Dash
-    dash_app = dash.Dash(
-        __name__,
-        server=flask_app,
-        url_base_pathname='/dash/'  # Dash will be served at /dash/
-    )
-
-    # Layout of your Dash app
+    dash_app = dash.Dash(__name__, server=flask_app, url_base_pathname='/dash/')
     dash_app.layout = html.Div([
         html.H1("Roobet Affiliate Stats Visualization"),
-        dcc.Input(
-            id='user-id-input',
-            type='text',
-            placeholder='Enter User ID...',
-            value='12345',
-            style={'marginRight': '10px'}
-        ),
+        dcc.Input(id='user-id-input', type='text', placeholder='User ID...', value='12345'),
         html.Button('Load Stats', id='load-button', n_clicks=0),
-        html.Div(id='error-message', style={'color': 'red'}),
-        dcc.Graph(id='stats-graph')
+        dcc.Graph(id='stats-graph'),
+        html.Div(id='error-message', style={'color': 'red'})
     ])
 
-    # Define Dash callbacks
     @dash_app.callback(
-        Output('stats-graph', 'figure'),
-        Output('error-message', 'children'),
-        Input('load-button', 'n_clicks'),
-        Input('user-id-input', 'value'),
+        dash.dependencies.Output('stats-graph', 'figure'),
+        dash.dependencies.Output('error-message', 'children'),
+        dash.dependencies.Input('load-button', 'n_clicks'),
+        dash.dependencies.State('user-id-input', 'value')
     )
     def update_graph(n_clicks, user_id):
-        """Fetch data from our Flask backend and plot it."""
         if n_clicks < 1:
-            # No button click yet; return empty figure
-            fig = px.scatter(x=[], y=[])
-            return fig, ""
+            # No button pressed yet => return an empty figure
+            return go.Figure(), ""
 
-        # Call the Flask endpoint we created in app.py
-        url = "http://localhost:5000/api/roobet-stats"
         try:
-            resp = requests.get(url, params={"userId": user_id})
+            resp = requests.get("http://localhost:5000/api/roobet-stats",
+                                params={"userId": user_id})
             resp.raise_for_status()
             data = resp.json()
 
+            # If we get an empty or invalid data structure, handle it:
             if not isinstance(data, list) or len(data) == 0:
-                fig = px.scatter(x=[], y=[])
-                return fig, "No data or invalid response."
+                empty_fig = go.Figure()
+                return empty_fig, "No valid data returned from Roobet"
 
-            # Example chart: Let's plot 'wagered' vs. 'username'
-            df_data = []
+            # Now transform 'data' into a DataFrame for Plotly Express
+            # Example: if each item has 'username' and 'wagered'
+            df = []
             for item in data:
-                df_data.append({
+                df.append({
                     "username": item.get('username', 'Unknown'),
                     "wagered": item.get('wagered', 0)
                 })
+            df = pd.DataFrame(df)
+            fig = px.bar(df, x="username", y="wagered", title="Wagered Amounts")
 
-            fig = px.bar(df_data, x="username", y="wagered",
-                         title="User Wagered Amount")
-            return fig, ""
+            return fig, ""  # No error message
+
         except requests.exceptions.RequestException as e:
-            # Network or other request errors
-            fig = px.scatter(x=[], y=[])
-            return fig, f"Request Error: {str(e)}"
-        except Exception as e:
-            fig = px.scatter(x=[], y=[])
-            return fig, f"Unexpected Error: {str(e)}"
+            # We got a 4xx or 5xx or network error
+            empty_fig = go.Figure()
+            return empty_fig, f"Error: {str(e)}"
 
     return dash_app
